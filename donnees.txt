@@ -1,0 +1,29 @@
+Les arrêts :
+Arrêt 1 : 200, 120
+Arrêt 2 :200, 160
+Arrêt 3 : 160, 190
+Arrêt 4 :90, 190
+Arrêt 5 : 30, 170
+Arrêt 6 : 50, 90
+Arrêt 7 : 130, 80
+Arrêt 8 : 190, 60
+Arrêt 9 : 240, 20
+Arrêt 10: 310, 20
+Arrêt 11 :350, 70
+Arrêt 12 :350, 120
+Arrêt 13 :280, 130
+Arrêt 14 : 260, 90
+Arrêt 15 :320, 90
+Arrêt 16 : 360, 160
+Arrêt 17 : 310, 200
+Arrêt 18 : 260, 200
+Arrêt 19 : 230, 230
+Arrêt 20 :180, 280
+Arrêt 21 : 90, 250
+Arrêt 22 : 120, 150);
+
+Les lignes
+Ligne1 (Bleue) contient les arrêts : {1,2,3,4,5,6,7};
+Ligne2 (Verte) contient les arrêts : {1,8,9,10,11,12,13};
+Ligne3 (Rouge) contient les arrêts : {1,14,15,12,16,17,18,2};
+Ligne4 (Jaune) contient les arrêts : {1,2,19,20,21,4,22};
