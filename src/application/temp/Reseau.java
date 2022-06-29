@@ -25,18 +25,18 @@ public class Reseau {
                graph.getModel().beginUpdate();
                 try{
 
-//                    Arret a1 = new Arret("Arret 1 ", 150 , 150 , 40 ,40);
-//                    Arret a2 = new Arret("Arret 2 ", 180 , 150 , 40 ,40);
+//                    ArretModel a1 = new ArretModel("ArretModel 1 ", 150 , 150 , 40 ,40);
+//                    ArretModel a2 = new ArretModel("ArretModel 2 ", 180 , 150 , 40 ,40);
 //
 //                    graph.insertEdge(parent,null,"Lien" , a1.getNodeScene() , a2.getNodeScene());
 
-                        ligne.addArret(new Arret("Arret 1 ", 150 , 150 , 40 ,40));
-                        ligne.addArret(new Arret("Arret 2 ", 180 , 80 , 40 ,40));
-                        ligne.addArret(new Arret("Arret 3 ", 300 , 120 , 40 ,40));
-                        ligne.addArret(new Arret("Arret 4 ", 350 , 140 , 40 ,40));
-                        ligne.addArret(new Arret("Arret 5 ", 400 , 150 , 40 ,40));
-                        ligne.addArret(new Arret("Arret 6 ", 450 , 160 , 40 ,40));
-                        ligne.addArret(new Arret("Arret 7 ", 500, 180 , 40 ,40));
+                        ligne.addArret(new Arret("ArretModel 1 ", 150 , 150 , 40 ,40));
+                        ligne.addArret(new Arret("ArretModel 2 ", 180 , 80 , 40 ,40));
+                        ligne.addArret(new Arret("ArretModel 3 ", 300 , 120 , 40 ,40));
+                        ligne.addArret(new Arret("ArretModel 4 ", 350 , 140 , 40 ,40));
+                        ligne.addArret(new Arret("ArretModel 5 ", 400 , 150 , 40 ,40));
+                        ligne.addArret(new Arret("ArretModel 6 ", 450 , 160 , 40 ,40));
+                        ligne.addArret(new Arret("ArretModel 7 ", 500, 180 , 40 ,40));
                         ligne.linkLast();
                         threadSimulation();
 
@@ -53,10 +53,10 @@ public class Reseau {
                 while(true){
                     index++;
                     if(index % 2 == 0){
-                    System.out.println("Bus 1 ...");
+                    System.out.println("BusModel 1 ...");
                     }
                     else{
-                        System.out.println("Bus 2 ...");
+                        System.out.println("BusModel 2 ...");
                     }
                     try {
                         Thread.sleep(200);
