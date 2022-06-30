@@ -29,6 +29,7 @@ public class BusSimulation extends SimulationObject {
         this.enPanneBusState = new EnPanneBusState(this);
         this.changeState(depotBusState);
         this.initBehaviour();
+        this.minDelaiEntreChaqueArret += Math.random() * maxRandomDelaiAdded;
     }
 
     public void changeState(BusState newState){
@@ -94,14 +95,15 @@ public class BusSimulation extends SimulationObject {
         this.currentArret = currentligne.getArrets().get(indexCurrentArret);
     }
 
-
     private void chargePassagers(){
         changeState(chargePassagerBusState);
         this.currentState.display();
         waitFor(minDelaiChargementPassagers);
     }
 
-    private void tombeEnPanne(){}
+    private void tombeEnPanne(){ // 80 % de chance de tomber en panne si c'est un MAN non je rigole : )
+
+    }
 
     private void rentreAuDepot(){ // rentre après X tours
             onRentreAuDepotAction();
@@ -131,12 +133,27 @@ public class BusSimulation extends SimulationObject {
         return currentArret.toString();
     }
 
-
-
     @Override
     public String toString() {
         BusModel busModel = getModel();
         return busModel.toString();
+    }
+
+    public String getId(){
+        BusModel busModel = getModel();
+        return busModel.getId()+"";
+    }
+
+    public String getCurrentArretNom(){
+            return getCurrentArret().getModel().getNom();
+    }
+
+    public String getNextArretNom(){
+        return getNextArret().getModel().getNom();
+    }
+
+    public String getCurrentLigneId(){
+        return currentligne.getModel().getId()+"";
     }
 
     @Override
