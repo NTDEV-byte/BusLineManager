@@ -1,7 +1,7 @@
 package application.back.simulation.items;
 
 import application.back.models.BusModel;
-import application.back.simulation.state.*;
+import application.back.simulation.items.state.*;
 
 public class BusSimulation extends SimulationObject {
 

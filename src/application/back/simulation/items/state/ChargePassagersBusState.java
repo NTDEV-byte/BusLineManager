@@ -1,4 +1,4 @@
-package application.back.simulation.state;
+package application.back.simulation.items.state;
 
 import application.back.simulation.items.BusSimulation;
 
