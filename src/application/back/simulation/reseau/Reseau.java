@@ -4,7 +4,7 @@ import application.back.models.ArretModel;
 import application.back.models.LigneModel;
 import application.back.simulation.items.ArretSimulation;
 import application.back.simulation.items.BusSimulation;
-import application.back.simulation.items.Depot;
+import application.back.simulation.items.DepotSimulation;
 import application.back.simulation.items.LigneSimulation;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +16,11 @@ public class Reseau implements IReseau {
     private List<LigneSimulation> lignes;
     private List<BusSimulation> busEnCirculation;
 
-    private Depot depot;
+    private DepotSimulation depot;
 
     public Reseau() {
         this.lignes = new ArrayList<>();
-        this.depot = new Depot();
+        this.depot = new DepotSimulation();
         this.busEnCirculation = new ArrayList<>();
     }
 

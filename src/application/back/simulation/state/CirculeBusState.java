@@ -12,6 +12,6 @@ public class CirculeBusState extends BusState {
 
     @Override
     public void display() {
-        System.out.println(bus.toString()+ " circule entre l'arrêt "+bus.getArretPresent().toString() + "et l'arrêt: "+1);
+        System.out.println(bus.toString()+ " circule entre l'arrêt "+bus.getCurrentArret().toString() + " et l'arrêt: "+ bus.getNextArret().toString());
     }
 }

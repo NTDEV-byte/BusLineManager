@@ -8,19 +8,18 @@ public class BusSimulation extends SimulationObject {
     private int maxRandomDelaiAdded = 5000;
     private int minDelaiChargementPassagers = 2000;
     private int minDelaiEntreChaqueArret = 3000;
+    private int indexCurrentArret;
     private boolean enCirculation;
+    private BusState currentState;
 
     private BusState chargePassagerBusState,
                      circuleBusSate,
                      depotBusState,
                      enPanneBusState;
 
-    private BusState currentState;
     private LigneSimulation currentligne;
     private ArretSimulation currentArret;
     private Thread thread;
-    private int tours = 0;
-
 
     public BusSimulation(BusModel model) {
         super(model);
@@ -41,6 +40,7 @@ public class BusSimulation extends SimulationObject {
             this.currentArret = ligneAffecter.getArrets().get(0);
             this.enCirculation = true;
             this.changeState(chargePassagerBusState);
+            this.indexCurrentArret = 0;
             this.thread.start();
     }
 
@@ -49,6 +49,7 @@ public class BusSimulation extends SimulationObject {
             this.currentArret = arretDebut;
             this.enCirculation = true;
             this.changeState(chargePassagerBusState);
+            this.indexCurrentArret = ligneAffecter.getArrets().indexOf(arretDebut);
             this.thread.start();
     }
 
@@ -59,25 +60,52 @@ public class BusSimulation extends SimulationObject {
             this.changeState(depotBusState);
     }
 
+    public ArretSimulation getCurrentArret(){
+        return currentligne.getArrets().get(indexCurrentArret);
+    }
+
+    public ArretSimulation getNextArret(){
+         int totalArrets = currentligne.getArrets().size();
+         if(indexCurrentArret < totalArrets - 1){
+               return currentligne.getArrets().get(indexCurrentArret + 1);
+         }
+         return currentligne.getArrets().get(0);
+    }
+
     private synchronized void initBehaviour(){
         thread = new Thread(() -> {
             while(enCirculation){
-
-                changeState(chargePassagerBusState);
-                this.currentState.display();
-                waitFor(minDelaiChargementPassagers);
-
-                changeState(circuleBusSate);
-                this.currentState.display();
-                waitFor(minDelaiEntreChaqueArret);
-
-                tours++;
-                if(tours >= 3) {
-                    onRentreAuDepotAction();
-                    this.currentState.display();
-                }
+                circuleEntreArrets();
+                chargePassagers();
+                avanceVersProchainArret();
             }
         });
+    }
+
+    private void circuleEntreArrets(){
+        changeState(circuleBusSate);
+        this.currentState.display();
+        waitFor(minDelaiEntreChaqueArret);
+    }
+
+    private void avanceVersProchainArret(){
+        indexCurrentArret++;
+        if(indexCurrentArret >= currentligne.getArrets().size()) indexCurrentArret = 0;
+        this.currentArret = currentligne.getArrets().get(indexCurrentArret);
+    }
+
+
+    private void chargePassagers(){
+        changeState(chargePassagerBusState);
+        this.currentState.display();
+        waitFor(minDelaiChargementPassagers);
+    }
+
+    private void tombeEnPanne(){}
+
+    private void rentreAuDepot(){ // rentre après X tours
+            onRentreAuDepotAction();
+            this.currentState.display();
     }
 
     private void waitFor(int temps){
@@ -103,9 +131,7 @@ public class BusSimulation extends SimulationObject {
         return currentArret.toString();
     }
 
-    public ArretSimulation getArretPresent(){
-         return currentArret;
-    }
+
 
     @Override
     public String toString() {

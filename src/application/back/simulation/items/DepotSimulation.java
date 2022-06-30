@@ -5,13 +5,13 @@ import application.back.models.BusModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Depot {
+public class DepotSimulation {
 
         private List<BusSimulation> bus;
         private String models[] = {"BMW" , "MERCEDES" ,"MAN"};
         private String immatriculations[] = {"XA124" , "ZA124" ,"MA124"};
 
-        public Depot(){
+        public DepotSimulation(){
                 bus = new ArrayList<>();
                 for(int i = 1; i <= 3 ; i++){
                  bus.add(new BusSimulation(new BusModel(i , models[i - 1] , immatriculations[i - 1])));

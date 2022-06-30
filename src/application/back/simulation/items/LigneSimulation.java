@@ -38,6 +38,15 @@ public class LigneSimulation extends SimulationObject {
             this.bus.add(bus);
     }
 
+
+    public ArretSimulation getDepart(){
+            return arrets.get(0);
+    }
+
+    public ArretSimulation getArriver(){
+            return arrets.get(arrets.size() - 1);
+    }
+
     public String getBusInfo(){
         if(bus.size() == 0){
             System.err.println("Aucun bus est affecté a cette ligne !");

@@ -10,7 +10,7 @@ public class ChargePassagersBusState extends BusState{
 
     @Override
     public void display() {
-        System.out.println(bus.toString()+ " est entrain de charger des passagers à l'arret: "+bus.getArretPresent().toString());
+        System.out.println(bus.toString()+ " est entrain de charger des passagers à l'arret: "+bus.getCurrentArret().toString());
     }
 
 }
