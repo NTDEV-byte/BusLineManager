@@ -1,11 +1,14 @@
 package application.back.simulation.items;
 
 import application.back.models.BusModel;
+import application.back.simulation.BusNotification;
 import application.back.simulation.items.state.*;
+
+import java.util.concurrent.SubmissionPublisher;
 
 public class BusSimulation extends SimulationObject {
 
-    private int maxRandomDelaiAdded = 5000;
+    private int maxRandomDelaiAdded = 2000;
     private int minDelaiChargementPassagers = 2000;
     private int minDelaiEntreChaqueArret = 3000;
     private int indexCurrentArret;
@@ -20,6 +23,8 @@ public class BusSimulation extends SimulationObject {
     private LigneSimulation currentligne;
     private ArretSimulation currentArret;
     private Thread thread;
+    private SubmissionPublisher<BusNotification> notifier;
+
 
     public BusSimulation(BusModel model) {
         super(model);
@@ -30,6 +35,7 @@ public class BusSimulation extends SimulationObject {
         this.changeState(depotBusState);
         this.initBehaviour();
         this.minDelaiEntreChaqueArret += Math.random() * maxRandomDelaiAdded;
+        this.notifier = new SubmissionPublisher<>();
     }
 
     public void changeState(BusState newState){
@@ -43,6 +49,8 @@ public class BusSimulation extends SimulationObject {
             this.changeState(chargePassagerBusState);
             this.indexCurrentArret = 0;
             this.thread.start();
+            this.notifier.subscribe(ligneAffecter);
+            this.notifyOnStart(currentArret);
     }
 
     public void onSortieDuDepotAction(LigneSimulation ligneAffecter,ArretSimulation arretDebut){
@@ -52,6 +60,8 @@ public class BusSimulation extends SimulationObject {
             this.changeState(chargePassagerBusState);
             this.indexCurrentArret = ligneAffecter.getArrets().indexOf(arretDebut);
             this.thread.start();
+            this.notifier.subscribe(ligneAffecter);
+            this.notifyOnStart(currentArret);
     }
 
     public void onRentreAuDepotAction(){
@@ -59,6 +69,11 @@ public class BusSimulation extends SimulationObject {
             this.currentArret = null;
             this.enCirculation = false;
             this.changeState(depotBusState);
+    }
+
+    private void notifyOnStart(ArretSimulation arretDebut){
+        int arretID = arretDebut.getModel().getId();
+        this.getNotifier().submit(new BusNotification(BusNotification.STATE_CHARGEMENT_PASSAGERS,indexCurrentArret, "Arrêt "+arretID+" - Bus "+getModel().getId()));
     }
 
     public ArretSimulation getCurrentArret(){
@@ -159,6 +174,11 @@ public class BusSimulation extends SimulationObject {
     @Override
     public BusModel getModel() {
         return ((BusModel)model);
+    }
+
+
+    public SubmissionPublisher<BusNotification> getNotifier() {
+        return notifier;
     }
 
 }
