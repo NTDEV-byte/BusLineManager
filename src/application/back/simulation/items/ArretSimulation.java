@@ -8,10 +8,20 @@ public class ArretSimulation extends SimulationObject {
 
     private static Reseau reseau = Reseau.getInstance();
     private Object node;
+    private int width,height;
 
     public ArretSimulation(ArretModel model) {
             super(model);
+            this.width = 80;
+            this.height = 15;
             this.node = createCurrentNodeScene();
+    }
+
+    public ArretSimulation(ArretModel model,int width,int height) {
+        super(model);
+        this.width = width;
+        this.height = height;
+        this.node = createCurrentNodeScene();
     }
 
     @Override
@@ -20,12 +30,10 @@ public class ArretSimulation extends SimulationObject {
         return arretModel.toString();
     }
 
-
-
     private Object createCurrentNodeScene(){
         mxGraph graph = reseau.getGraph();
         ArretModel model = getModel();
-        return graph.insertVertex(reseau.getParent() ,null,model.getNom(), model.getLatitude() , model.getLongitude() , 80, 80);
+        return graph.insertVertex(reseau.getParent() ,null,model.getNom(), model.getLatitude() , model.getLongitude() , width, height);
     }
 
     public Object getNodeScene(){return node;}

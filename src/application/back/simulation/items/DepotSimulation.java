@@ -18,7 +18,6 @@ public class DepotSimulation {
                 }
         }
 
-
         public BusSimulation affecteBusAlALigneDuReseau(int busId, LigneSimulation ligne){
                 if(bus.size() == 0){
                         System.err.println("Aucun bus n'est présent dans le dépôt !");

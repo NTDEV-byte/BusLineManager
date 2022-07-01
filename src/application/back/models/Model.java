@@ -16,5 +16,4 @@ public abstract class Model {
                 this.id = id;
         }
 
-
 }
