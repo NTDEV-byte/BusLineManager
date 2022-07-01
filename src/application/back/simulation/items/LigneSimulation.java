@@ -1,45 +1,54 @@
 package application.back.simulation.items;
 
-import application.back.models.ArretModel;
 import application.back.models.LigneModel;
+import application.back.simulation.BusNotification;
 import application.back.simulation.reseau.Reseau;
+import com.mxgraph.model.mxCell;
+import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Flow;
 
-public class LigneSimulation extends SimulationObject {
+public class LigneSimulation extends SimulationObject implements Flow.Subscriber<BusNotification>{
 
     private static Reseau reseau = Reseau.getInstance();
     private List<BusSimulation> bus;
     private List<ArretSimulation> arrets;
+    private List<Object> edges;
+    private String color = "=#";
+    private Flow.Subscription subscription;
+
+
 
     public LigneSimulation(LigneModel model) {
         super(model);
         this.bus = new ArrayList<>();
         this.arrets = new ArrayList<>();
+        this.edges = new ArrayList<>();
+        this.color = "=#ff0000";
+    }
+
+    public LigneSimulation(LigneModel model,String colorHexCode) {
+        super(model);
+        this.bus = new ArrayList<>();
+        this.arrets = new ArrayList<>();
+        this.edges = new ArrayList<>();
+        this.color += colorHexCode;
     }
 
     public void addArret(ArretSimulation arret){
         LigneModel ligneModel = (LigneModel) model;
-        ligneModel.ajouteArret((ArretModel) arret.getModel());
+        ligneModel.ajouteArret(arret.getModel());
         this.arrets.add(arret);
-        createEdgeOnAdd();
+        this.createEdgeOnAdd();
     }
 
     public void removeArret(ArretSimulation arret){
         LigneModel ligneModel = (LigneModel) model;
-        ligneModel.supprimeArret((ArretModel) arret.getModel());
+        ligneModel.supprimeArret(arret.getModel());
         this.arrets.remove(arret);
-    }
-
-    public void linkLast(){
-        ArretSimulation start = arrets.get(0);
-        ArretSimulation last = arrets.get(arrets.size() - 1);
-
-        mxGraph graph = Reseau.getInstance().getGraph();
-        Object parent = Reseau.getInstance().getParent();
-        graph.insertEdge(parent,null,"Lien" , last.getNodeScene() ,start.getNodeScene());
     }
 
     private void createEdgeOnAdd(){
@@ -48,10 +57,40 @@ public class LigneSimulation extends SimulationObject {
             ArretSimulation a1 = arrets.get(arrets.size() - 1);
             ArretSimulation a2 = arrets.get(arrets.size() - 2);
             Object parent = Reseau.getInstance().getParent();
-            graph.insertEdge(parent,null,"Lien" ,a2.getNodeScene() , a1.getNodeScene());
+            Object createdEdge = graph.insertEdge(parent,null,"Lien" ,a2.getNodeScene() , a1.getNodeScene(),mxConstants.STYLE_STROKECOLOR+color);
+            edges.add(createdEdge);
         }
     }
 
+    public void linkLast(){
+        ArretSimulation start = arrets.get(0);
+        ArretSimulation last = arrets.get(arrets.size() - 1);
+
+        mxGraph graph = Reseau.getInstance().getGraph();
+        Object parent = Reseau.getInstance().getParent();
+        Object lastEdge = graph.insertEdge(parent,null,"Lien" , last.getNodeScene() ,start.getNodeScene(),mxConstants.STYLE_STROKECOLOR+color);
+        edges.add(lastEdge);
+    }
+
+    public void changeEdgeInformation(int index,String newValue){
+            if(index < 0 || index >= edges.size()) {
+                System.err.println("Index Edge invalide ça doit être entre 0 et"+(edges.size() - 1));
+                return;
+            }
+            mxCell cell = (mxCell)getEdges().get(index);
+            cell.setValue(newValue);
+    }
+
+
+    public void changeArretInformation(int index,String newValue){
+        if(index < 0 || index >= edges.size()) {
+            System.err.println("Index Arrêt invalide ça doit être entre 0 et"+(edges.size() - 1));
+            return;
+        }
+            mxCell cell  = ((mxCell)getArrets().get(index).getNodeScene());
+            cell.setValue(newValue);
+
+    }
 
     public void addBus(BusSimulation bus){
            this.bus.add(bus);
@@ -65,7 +104,6 @@ public class LigneSimulation extends SimulationObject {
     public ArretSimulation getDepart(){
             return arrets.get(0);
     }
-
     public ArretSimulation getArriver(){
             return arrets.get(arrets.size() - 1);
     }
@@ -77,6 +115,38 @@ public class LigneSimulation extends SimulationObject {
         }
         return bus.toString();
     }
+
+
+
+    @Override
+    public void onSubscribe(Flow.Subscription subscription) {
+            this.subscription = subscription;
+            subscription.request(1);
+    }
+
+    @Override
+    public void onNext(BusNotification item) {
+            if(item.getTypeEvent() == BusNotification.STATE_CHARGEMENT_PASSAGERS){
+                changeArretInformation(item.getArretIndex() , item.getInformation());
+
+            }
+            else if(item.getTypeEvent() == BusNotification.STATE_EN_CIRCULATION){
+                changeEdgeInformation(item.getArretIndex() , item.getInformation());
+            }
+            subscription.request(1);
+            reseau.getGraph().refresh();
+    }
+
+    @Override
+    public void onError(Throwable throwable) {
+
+    }
+
+    @Override
+    public void onComplete() {
+
+    }
+
 
     @Override
     public String toString() {
@@ -104,4 +174,14 @@ public class LigneSimulation extends SimulationObject {
     public void setArrets(List<ArretSimulation> arrets) {
         this.arrets = arrets;
     }
+
+    public List<Object> getEdges() {
+        return edges;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+
 }
