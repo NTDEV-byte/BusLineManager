@@ -27,7 +27,7 @@ public class LigneSimulation extends SimulationObject implements Flow.Subscriber
         this.bus = new ArrayList<>();
         this.arrets = new ArrayList<>();
         this.edges = new ArrayList<>();
-        this.color = "=#ff0000";
+        this.color += model.getCouleur();
     }
 
     public LigneSimulation(LigneModel model,String colorHexCode) {
@@ -72,25 +72,53 @@ public class LigneSimulation extends SimulationObject implements Flow.Subscriber
         edges.add(lastEdge);
     }
 
-    public void changeEdgeInformation(int index,String newValue){
-            if(index < 0 || index >= edges.size()) {
-                System.err.println("Index Edge invalide ça doit être entre 0 et"+(edges.size() - 1));
-                return;
-            }
-            mxCell cell = (mxCell)getEdges().get(index);
-            cell.setValue(newValue);
-    }
 
 
     public void changeArretInformation(int index,String newValue){
-        if(index < 0 || index >= edges.size()) {
+        if(index < 0 || index > edges.size()) {
             System.err.println("Index Arrêt invalide ça doit être entre 0 et"+(edges.size() - 1));
             return;
         }
-            mxCell cell  = ((mxCell)getArrets().get(index).getNodeScene());
-            cell.setValue(newValue);
+        if(index >= 1){
+            // effacement du nom du bus sur le lien lorsque il arrive sur l'arrêt suivant
+            mxCell lienEntreDeuxArrêts  = ((mxCell)getEdges().get(index - 1));
+            lienEntreDeuxArrêts.setValue("");
 
+            //System.out.println("index: "+index);
+
+            mxCell arretPresent  = ((mxCell)getArrets().get(index).getNodeScene());
+            arretPresent.setValue(newValue);
+        }
+        else{
+            //System.out.println("index: "+index);
+            mxCell arretPresent  = ((mxCell)getArrets().get(index).getNodeScene());
+            arretPresent.setValue(newValue);
+        }
     }
+
+
+    public void changeEdgeInformation(int index,String newValue){
+        if(index < 0 || index > edges.size()) {
+            System.err.println("Index Edge invalide ça doit être entre 0 et"+(edges.size() - 1));
+            return;
+        }
+        if(index >= 1){
+
+            // effacement du nom de l'arrêt - Bus lorsque ce dernier quit l'arrêt
+            mxCell arretPrecedent  = ((mxCell)getArrets().get(index - 1).getNodeScene());
+            ArretSimulation ars = arrets.get(index - 1);
+            arretPrecedent.setValue(ars.getModel().getNom());
+
+           mxCell cell = (mxCell)getEdges().get(index - 1);
+           cell.setValue(newValue);
+        }
+        else{
+           // System.out.println("index: "+index);
+            mxCell arretPresent  = ((mxCell)getArrets().get(index).getNodeScene());
+            arretPresent.setValue(newValue);
+        }
+    }
+
 
     public void addBus(BusSimulation bus){
            this.bus.add(bus);
@@ -128,11 +156,11 @@ public class LigneSimulation extends SimulationObject implements Flow.Subscriber
     public void onNext(BusNotification item) {
             if(item.getTypeEvent() == BusNotification.STATE_CHARGEMENT_PASSAGERS){
                 changeArretInformation(item.getArretIndex() , item.getInformation());
-
             }
             else if(item.getTypeEvent() == BusNotification.STATE_EN_CIRCULATION){
                 changeEdgeInformation(item.getArretIndex() , item.getInformation());
             }
+            System.out.println("HIT");
             subscription.request(1);
             reseau.getGraph().refresh();
     }
@@ -144,7 +172,7 @@ public class LigneSimulation extends SimulationObject implements Flow.Subscriber
 
     @Override
     public void onComplete() {
-
+        System.out.println("Completed !");
     }
 
 

@@ -10,7 +10,7 @@ public class BusSimulation extends SimulationObject {
 
     private int maxRandomDelaiAdded = 2000;
     private int minDelaiChargementPassagers = 2000;
-    private int minDelaiEntreChaqueArret = 3000;
+    private int minDelaiEntreChaqueArret = 2000;
     private int indexCurrentArret;
     private boolean enCirculation;
     private BusState currentState;

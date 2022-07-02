@@ -12,7 +12,7 @@ public class BusLineManagerView extends JFrame {
             super("BusLineManager | Graph");
             mxGraphComponent graphComponent = new mxGraphComponent(graph);
             getContentPane().add(graphComponent);
-            setSize(new Dimension(800,600));
+            setSize(new Dimension(1200,800));
             setLocationRelativeTo(null);
             setVisible(true);
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
