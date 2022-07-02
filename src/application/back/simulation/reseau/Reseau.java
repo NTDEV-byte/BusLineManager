@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class Reseau implements IReseau {
+public abstract class Reseau implements IReseau {
 
     public static Reseau INSTANCE = null;
 
@@ -42,7 +42,7 @@ public class Reseau implements IReseau {
         //this.configJGraphX();
     }
 
-    private void configJGraphX(){
+    protected void configJGraphX(){
         Map<String, Object> style = graph.getStylesheet().getDefaultEdgeStyle();
         style.put(mxConstants.STYLE_ROUNDED, true);
         style.put(mxConstants.STYLE_EDGE, mxConstants.EDGESTYLE_ENTITY_RELATION);
@@ -100,7 +100,17 @@ public class Reseau implements IReseau {
     }
 
     @Override
-    public void loadReseau(String pathReseau) {
+    public abstract void loadReseau();
+
+
+    protected void affectationBus()
+    {
+        depot.affecteBusAlALigneDuReseau(1 , lignes.get(0));
+        depot.affecteBusAlALigneDuReseau(3 , lignes.get(1));
+        depot.affecteBusAlALigneDuReseau(2 , lignes.get(2));
+    }
+
+    protected void createReseauUsingFile(String pathReseau){
         ReseauModel model = loadReseauConfig(pathReseau);
         List<LigneModel> lignesModels = model.getLignes();
         LigneSimulation ligneActuelleSimulation = null;
@@ -108,6 +118,8 @@ public class Reseau implements IReseau {
         int ligneTotal = lignesModels.size();
         int arretTotal;
 
+
+        // création des lignes pricipales du réseau
         for(int ligneIndex = 0; ligneIndex < ligneTotal; ligneIndex++){
 
             ligneActuelleSimulation = new LigneSimulation(lignesModels.get(ligneIndex));
@@ -115,20 +127,14 @@ public class Reseau implements IReseau {
             List<ArretModel> arrets = lignesModels.get(ligneIndex).getArrets();
             arretTotal = arrets.size();
 
-              for(int arretIndex = 0; arretIndex < arretTotal; arretIndex++)
-              {
-                  ligneActuelleSimulation.addArret(new ArretSimulation(arrets.get(arretIndex)));
-              //    System.out.println(arretIndex);
-              }
-                System.out.println("IT 1");
+            for(int arretIndex = 0; arretIndex < arretTotal; arretIndex++)
+            {
+                ligneActuelleSimulation.addArret(new ArretSimulation(arrets.get(arretIndex)));
+            }
 
-                ligneActuelleSimulation.linkLast();
-                lignes.add(ligneActuelleSimulation);
+            ligneActuelleSimulation.linkLast();
+            lignes.add(ligneActuelleSimulation);
         }
-
-        depot.affecteBusAlALigneDuReseau(1 , lignes.get(0));
-        depot.affecteBusAlALigneDuReseau(2 , lignes.get(2));
-        displayGUI();
 
     }
 
@@ -158,10 +164,23 @@ public class Reseau implements IReseau {
         return parent;
     }
 
-    public static Reseau getInstance(){
+    public static Reseau createReseau(ReseauDisponibleEnum reseau){
         if(INSTANCE == null){
-             INSTANCE = new Reseau();
+             if(reseau == ReseauDisponibleEnum.AMETIS){
+                  INSTANCE = new AmetisReseau();
+             }
+             else
+                if(reseau == ReseauDisponibleEnum.SNCF){
+                  INSTANCE = new SncfReseau();
+             } else{
+                  INSTANCE = new DefaultReseau();
+                }
         }
+        return INSTANCE;
+    }
+
+
+    public static Reseau getInstance(){
         return INSTANCE;
     }
 
@@ -169,17 +188,14 @@ public class Reseau implements IReseau {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         String data = "";
-
         try {
             data =  Files.readString(Path.of(pathReseau));
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         Type reseauType = new TypeToken<ReseauModel>(){}.getType();
-
         ReseauModel model = gson.fromJson(data , reseauType);
-
+        System.out.println("Arrêts: "+model.getArretsCommuns().toString());
         return model;
     }
 

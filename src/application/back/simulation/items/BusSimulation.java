@@ -3,6 +3,7 @@ package application.back.simulation.items;
 import application.back.models.BusModel;
 import application.back.simulation.BusNotification;
 import application.back.simulation.items.state.*;
+import application.view.BusLineManagerView;
 
 import java.util.concurrent.SubmissionPublisher;
 
@@ -94,15 +95,16 @@ public class BusSimulation extends SimulationObject {
                 chargePassagers();
                 circuleEntreArrets();
                 avanceVersProchainArret();
+
             }
         });
     }
 
     private void circuleEntreArrets(){
-        changeState(new CirculeBusState(this));
+        changeState(this.circuleBusSate);
         this.currentState.display();
-        waitFor(100);
-        tombeEnPanne();
+        //waitFor(100);
+        //tombeEnPanne();
         waitFor(minDelaiEntreChaqueArret);
     }
 
@@ -121,14 +123,14 @@ public class BusSimulation extends SimulationObject {
     }
 
     private void chargePassagers(){
-        changeState(new ChargePassagersBusState(this));
+        changeState(this.chargePassagerBusState);
         this.currentState.display();
         waitFor(minDelaiChargementPassagers);
     }
 
     private void tombeEnPanne() { // 80 % de chance de tomber en panne si c'est un MAN non je rigole : )
-        if (Math.random() <= 0.2) {
-            changeState(new EnPanneBusState(this));
+        if (Math.random() <= 0.8) {
+            changeState(this.enPanneBusState);
             this.currentState.display();
             waitFor(5000);
         }

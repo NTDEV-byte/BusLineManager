@@ -4,7 +4,7 @@ public interface IReseau {
 
             // construction
             public void constructReseau();
-            public void loadReseau(String pathReseau);
+            public void loadReseau();
 
             public void displayInConsole();
             public void displayGUI();

@@ -1,0 +1,117 @@
+{
+  "nomReseau": "R1 ",
+  "arretsCommuns" : [{"ligne1" :  2 , "ligne2" : 3,  "arret1" : 1 , "arret2" : 1 }],
+  "lignes": [
+    {
+      "id": 1,
+      "nom": "L1",
+      "couleur": "00ff00",
+      "arrets": [
+        {
+          "id": 1,
+          "nom": "L1-A1",
+          "latitude": 300,
+          "longitude": 20
+        },
+        {
+          "id": 2,
+          "nom": "L1-A2",
+          "latitude": 400,
+          "longitude": 120
+        },
+        {
+          "id": 3,
+          "nom": "L1-A3",
+          "latitude": 450,
+          "longitude": 200
+        },
+        {
+          "id": 4,
+          "nom": "L1-A4",
+          "latitude": 550,
+          "longitude": 300
+        },
+        {
+          "id": 5,
+          "nom": "L1-A5",
+          "latitude": 700,
+          "longitude": 200
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "nom": "L2",
+      "couleur": "ffff00",
+      "arrets": [
+        {
+          "id": 1,
+          "nom": "L2-A1",
+          "latitude": 300,
+          "longitude": 300
+        },
+        {
+          "id": 2,
+          "nom": "L2-A2",
+          "latitude": 200,
+          "longitude": 500
+        },
+        {
+          "id": 3,
+          "nom": "L2-A3",
+          "latitude": 150,
+          "longitude": 600
+        },
+        {
+          "id": 4,
+          "nom": "L2-A4",
+          "latitude": 150,
+          "longitude": 700
+        },
+        {
+          "id": 5,
+          "nom": "L2-A5",
+          "latitude": 450,
+          "longitude": 700
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "nom": "L3",
+      "couleur": "0000ff",
+      "arrets": [
+        {
+          "id": 1,
+          "nom": "L3-A1",
+          "latitude": 800,
+          "longitude": 300
+        },
+        {
+          "id": 2,
+          "nom": "L3-A2",
+          "latitude": 600,
+          "longitude": 400
+        },
+        {
+          "id": 3,
+          "nom": "L3-A3",
+          "latitude": 600,
+          "longitude": 500
+        },
+        {
+          "id": 4,
+          "nom": "L3-A4",
+          "latitude": 600,
+          "longitude": 600
+        },
+        {
+          "id": 5,
+          "nom": "L3-A5",
+          "latitude": 600,
+          "longitude": 700
+        }
+      ]
+    }
+  ]
+}

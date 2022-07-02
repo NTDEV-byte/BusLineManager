@@ -51,13 +51,14 @@ public class LigneSimulation extends SimulationObject implements Flow.Subscriber
         this.arrets.remove(arret);
     }
 
+
     private void createEdgeOnAdd(){
         mxGraph graph = Reseau.getInstance().getGraph();
         if(arrets.size() > 1){
             ArretSimulation a1 = arrets.get(arrets.size() - 1);
             ArretSimulation a2 = arrets.get(arrets.size() - 2);
             Object parent = Reseau.getInstance().getParent();
-            Object createdEdge = graph.insertEdge(parent,null,"Lien" ,a2.getNodeScene() , a1.getNodeScene(),mxConstants.STYLE_STROKECOLOR+color);
+            Object createdEdge = graph.insertEdge(parent,null,"" ,a2.getNodeScene() , a1.getNodeScene(),mxConstants.STYLE_STROKECOLOR+color);
             edges.add(createdEdge);
         }
     }
@@ -68,7 +69,7 @@ public class LigneSimulation extends SimulationObject implements Flow.Subscriber
 
         mxGraph graph = Reseau.getInstance().getGraph();
         Object parent = Reseau.getInstance().getParent();
-        Object lastEdge = graph.insertEdge(parent,null,"Lien" , last.getNodeScene() ,start.getNodeScene(),mxConstants.STYLE_STROKECOLOR+color);
+        Object lastEdge = graph.insertEdge(parent,null,"" , last.getNodeScene() ,start.getNodeScene(),mxConstants.STYLE_STROKECOLOR+color);
         edges.add(lastEdge);
     }
 
@@ -149,7 +150,6 @@ public class LigneSimulation extends SimulationObject implements Flow.Subscriber
 
     @Override
     public void onNext(BusNotification item) {
-            System.out.println("HIT");
             if(item.getTypeEvent() == BusNotification.STATE_CHARGEMENT_PASSAGERS){
                 changeArretInformation(item.getArretIndex() , item.getInformation());
             }
