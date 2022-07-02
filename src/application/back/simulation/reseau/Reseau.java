@@ -1,15 +1,22 @@
 package application.back.simulation.reseau;
 import application.back.models.ArretModel;
 import application.back.models.LigneModel;
+import application.back.models.ReseauModel;
 import application.back.simulation.items.ArretSimulation;
 import application.back.simulation.items.BusSimulation;
 import application.back.simulation.items.DepotSimulation;
 import application.back.simulation.items.LigneSimulation;
 import application.view.BusLineManagerView;
-import com.mxgraph.model.mxCell;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -85,14 +92,47 @@ public class Reseau implements IReseau {
 //        l3.linkLast();
 
          depot.affecteBusAlALigneDuReseauEtArret(1,l1 , a1);
-
          depot.affecteBusAlALigneDuReseauEtArret(2,l2 , a21);
 //        depot.affecteBusAlALigneDuReseauEtArret(3,l1 , a1);
         //depot.affecteBusAlALigneDuReseauEtArret(3,l3 , a1);
+
+         displayGUI();
     }
 
     @Override
-    public void loadReseau() {
+    public void loadReseau(String pathReseau) {
+        ReseauModel model = loadReseauConfig(pathReseau);
+        List<LigneModel> lignesModels = model.getLignes();
+        LigneSimulation ligneActuelleSimulation = null;
+
+
+
+        int ligneTotal = lignesModels.size();
+        int arretTotal;
+
+        for(int ligneIndex = 0; ligneIndex < ligneTotal; ligneIndex++){
+
+            ligneActuelleSimulation = new LigneSimulation(lignesModels.get(ligneIndex));
+
+            List<ArretModel> arrets = lignesModels.get(ligneIndex).getArrets();
+            arretTotal = arrets.size();
+
+              for(int arretIndex = 0; arretIndex < arretTotal; arretIndex++)
+              {
+                  ligneActuelleSimulation.addArret(new ArretSimulation(arrets.get(arretIndex)));
+              //    System.out.println(arretIndex);
+              }
+                System.out.println("IT 1");
+
+                ligneActuelleSimulation.linkLast();
+                lignes.add(ligneActuelleSimulation);
+        }
+
+
+        depot.affecteBusAlALigneDuReseau(1 , lignes.get(0));
+
+
+        displayGUI();
 
     }
 
@@ -105,7 +145,7 @@ public class Reseau implements IReseau {
     public void displayGUI() {
         graph.getModel().beginUpdate();
         try{
-            constructReseau();
+           // constructReseau();
 
             new BusLineManagerView(graph);
 
@@ -127,6 +167,26 @@ public class Reseau implements IReseau {
              INSTANCE = new Reseau();
         }
         return INSTANCE;
+    }
+
+
+
+    private static ReseauModel loadReseauConfig(String pathReseau){
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        String data = "";
+
+        try {
+            data =  Files.readString(Path.of(pathReseau));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Type reseauType = new TypeToken<ReseauModel>(){}.getType();
+
+        ReseauModel model = gson.fromJson(data , reseauType);
+
+        return model;
     }
 
 }
