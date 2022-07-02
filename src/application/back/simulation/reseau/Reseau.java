@@ -105,8 +105,6 @@ public class Reseau implements IReseau {
         List<LigneModel> lignesModels = model.getLignes();
         LigneSimulation ligneActuelleSimulation = null;
 
-
-
         int ligneTotal = lignesModels.size();
         int arretTotal;
 
@@ -128,10 +126,8 @@ public class Reseau implements IReseau {
                 lignes.add(ligneActuelleSimulation);
         }
 
-
         depot.affecteBusAlALigneDuReseau(1 , lignes.get(0));
-
-
+        depot.affecteBusAlALigneDuReseau(2 , lignes.get(2));
         displayGUI();
 
     }
@@ -168,8 +164,6 @@ public class Reseau implements IReseau {
         }
         return INSTANCE;
     }
-
-
 
     private static ReseauModel loadReseauConfig(String pathReseau){
         GsonBuilder builder = new GsonBuilder();

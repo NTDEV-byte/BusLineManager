@@ -14,7 +14,7 @@ public class ChargePassagersBusState extends BusState{
     public void display() {
         System.out.println("Le bus : "+bus.getId()+ " est affecté à la ligne: "+bus.getCurrentLigneId()+" Il Charge des passagers à l'arret: "+bus.getCurrentArretNom());
         BusModel busModel = bus.getModel();
-        int arretID = bus.getCurrentArret().getModel().getId();
+        int arretID = bus.getIndexCurrentArret();
         bus.getNotifier().submit(new BusNotification(BusNotification.STATE_CHARGEMENT_PASSAGERS,arretID, "Arrêt "+arretID+" - Bus "+busModel.getId()));
     }
 

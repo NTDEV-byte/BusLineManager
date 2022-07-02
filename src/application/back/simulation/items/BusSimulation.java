@@ -8,7 +8,7 @@ import java.util.concurrent.SubmissionPublisher;
 
 public class BusSimulation extends SimulationObject {
 
-    private int maxRandomDelaiAdded = 2000;
+    private int maxRandomDelaiAdded = 3000;
     private int minDelaiChargementPassagers = 2000;
     private int minDelaiEntreChaqueArret = 2000;
     private int indexCurrentArret;
@@ -91,33 +91,47 @@ public class BusSimulation extends SimulationObject {
     private synchronized void initBehaviour(){
         thread = new Thread(() -> {
             while(enCirculation){
-                circuleEntreArrets();
                 chargePassagers();
+                circuleEntreArrets();
                 avanceVersProchainArret();
             }
         });
     }
 
     private void circuleEntreArrets(){
-        changeState(circuleBusSate);
+        changeState(new CirculeBusState(this));
         this.currentState.display();
+        waitFor(100);
+        tombeEnPanne();
         waitFor(minDelaiEntreChaqueArret);
     }
 
+    public int getIndexCurrentArret() {
+        return indexCurrentArret;
+    }
+
     private void avanceVersProchainArret(){
-        indexCurrentArret++;
-        if(indexCurrentArret >= currentligne.getArrets().size()) indexCurrentArret = 0;
+        if (indexCurrentArret + 1 >= currentligne.getArrets().size()) {
+            indexCurrentArret = 0;
+        } else {
+            indexCurrentArret++;
+        }
+
         this.currentArret = currentligne.getArrets().get(indexCurrentArret);
     }
 
     private void chargePassagers(){
-        changeState(chargePassagerBusState);
+        changeState(new ChargePassagersBusState(this));
         this.currentState.display();
         waitFor(minDelaiChargementPassagers);
     }
 
-    private void tombeEnPanne(){ // 80 % de chance de tomber en panne si c'est un MAN non je rigole : )
-
+    private void tombeEnPanne() { // 80 % de chance de tomber en panne si c'est un MAN non je rigole : )
+        if (Math.random() <= 0.2) {
+            changeState(new EnPanneBusState(this));
+            this.currentState.display();
+            waitFor(5000);
+        }
     }
 
     private void rentreAuDepot(){ // rentre après X tours
