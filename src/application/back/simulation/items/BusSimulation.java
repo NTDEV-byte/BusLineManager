@@ -5,6 +5,7 @@ import application.back.simulation.BusNotification;
 import application.back.simulation.items.state.*;
 import application.view.BusLineManagerView;
 
+import javax.swing.*;
 import java.util.concurrent.SubmissionPublisher;
 
 public class BusSimulation extends SimulationObject {
@@ -95,16 +96,15 @@ public class BusSimulation extends SimulationObject {
                 chargePassagers();
                 circuleEntreArrets();
                 avanceVersProchainArret();
-
             }
-        });
+        } , "Thread Bus: "+getModel().getId());
     }
 
-    private void circuleEntreArrets(){
+    private synchronized void circuleEntreArrets(){
         changeState(this.circuleBusSate);
         this.currentState.display();
-        //waitFor(100);
-        //tombeEnPanne();
+        waitFor(100);
+        tombeEnPanne();
         waitFor(minDelaiEntreChaqueArret);
     }
 
@@ -112,7 +112,7 @@ public class BusSimulation extends SimulationObject {
         return indexCurrentArret;
     }
 
-    private void avanceVersProchainArret(){
+    private synchronized void avanceVersProchainArret(){
         if (indexCurrentArret + 1 >= currentligne.getArrets().size()) {
             indexCurrentArret = 0;
         } else {
@@ -122,21 +122,21 @@ public class BusSimulation extends SimulationObject {
         this.currentArret = currentligne.getArrets().get(indexCurrentArret);
     }
 
-    private void chargePassagers(){
+    private synchronized void chargePassagers(){
         changeState(this.chargePassagerBusState);
         this.currentState.display();
         waitFor(minDelaiChargementPassagers);
     }
 
-    private void tombeEnPanne() { // 80 % de chance de tomber en panne si c'est un MAN non je rigole : )
-        if (Math.random() <= 0.8) {
+    private synchronized void tombeEnPanne() {
+        if (Math.random() <= 0.2) {
             changeState(this.enPanneBusState);
             this.currentState.display();
             waitFor(5000);
         }
     }
 
-    private void rentreAuDepot(){ // rentre après X tours
+    private void rentreAuDepot(){ // rentre après n tours
             onRentreAuDepotAction();
             this.currentState.display();
     }
@@ -191,7 +191,6 @@ public class BusSimulation extends SimulationObject {
     public BusModel getModel() {
         return ((BusModel)model);
     }
-
 
     public SubmissionPublisher<BusNotification> getNotifier() {
         return notifier;

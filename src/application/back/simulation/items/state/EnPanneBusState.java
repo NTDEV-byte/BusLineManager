@@ -12,7 +12,7 @@ public class EnPanneBusState extends BusState{
 
 
     @Override
-    public void display() {
+    public synchronized void display() {
         System.out.println("Le bus: " + bus.getId() + "  est en panne sur la ligne " + bus.getCurrentLigneId());
         BusModel busModel = bus.getModel();
         int arretID = bus.getIndexCurrentArret();

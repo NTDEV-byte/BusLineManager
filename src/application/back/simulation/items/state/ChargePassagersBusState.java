@@ -11,7 +11,7 @@ public class ChargePassagersBusState extends BusState{
     }
 
     @Override
-    public void display() {
+    public synchronized void display() {
         System.out.println("Le bus : "+bus.getId()+ " est affecté à la ligne: "+bus.getCurrentLigneId()+" Il Charge des passagers à l'arret: "+bus.getCurrentArretNom());
         BusModel busModel = bus.getModel();
         int arretID = bus.getIndexCurrentArret();

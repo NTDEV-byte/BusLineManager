@@ -1,4 +1,6 @@
-package application.back.simulation.reseau;
+package application.back.simulation.reseau.choix;
+
+import application.back.simulation.reseau.Reseau;
 
 public class SncfReseau extends Reseau {
 

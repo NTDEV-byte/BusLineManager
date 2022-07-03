@@ -11,7 +11,7 @@ public class CirculeBusState extends BusState {
     }
 
     @Override
-    public void display() {
+    public synchronized void display() {
         System.out.println("Le bus: "+bus.getId()+ "  est affecté à la ligne: "+bus.getCurrentLigneId() + " Il Circule entre l'arrêt Arrêt: "+bus.getCurrentArretNom() + " et l'arrêt: Arrêt "+ bus.getNextArretNom());
         BusModel busModel = bus.getModel();
         int arretID = bus.getIndexCurrentArret();

@@ -10,7 +10,7 @@ public class DepotBusState extends BusState{
 
 
     @Override
-    public void display() {
+    public synchronized void display() {
         System.out.println(bus.toString()+" est dans le dépot");
     }
 }

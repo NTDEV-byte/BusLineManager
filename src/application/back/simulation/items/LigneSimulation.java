@@ -1,5 +1,6 @@
 package application.back.simulation.items;
 
+import application.back.SimulationMain;
 import application.back.models.LigneModel;
 import application.back.simulation.BusNotification;
 import application.back.simulation.reseau.Reseau;
@@ -13,7 +14,7 @@ import java.util.concurrent.Flow;
 
 public class LigneSimulation extends SimulationObject implements Flow.Subscriber<BusNotification>{
 
-    private static Reseau reseau = Reseau.getInstance();
+    private static Reseau reseau = SimulationMain.getInstance();
     private List<BusSimulation> bus;
     private List<ArretSimulation> arrets;
     private List<Object> edges;
@@ -53,11 +54,11 @@ public class LigneSimulation extends SimulationObject implements Flow.Subscriber
 
 
     private void createEdgeOnAdd(){
-        mxGraph graph = Reseau.getInstance().getGraph();
+        mxGraph graph = SimulationMain.getInstance().getGraph();
         if(arrets.size() > 1){
             ArretSimulation a1 = arrets.get(arrets.size() - 1);
             ArretSimulation a2 = arrets.get(arrets.size() - 2);
-            Object parent = Reseau.getInstance().getParent();
+            Object parent = SimulationMain.getInstance().getParent();
             Object createdEdge = graph.insertEdge(parent,null,"" ,a2.getNodeScene() , a1.getNodeScene(),mxConstants.STYLE_STROKECOLOR+color);
             edges.add(createdEdge);
         }
@@ -67,15 +68,15 @@ public class LigneSimulation extends SimulationObject implements Flow.Subscriber
         ArretSimulation start = arrets.get(0);
         ArretSimulation last = arrets.get(arrets.size() - 1);
 
-        mxGraph graph = Reseau.getInstance().getGraph();
-        Object parent = Reseau.getInstance().getParent();
+        mxGraph graph = SimulationMain.getInstance().getGraph();
+        Object parent = SimulationMain.getInstance().getParent();
         Object lastEdge = graph.insertEdge(parent,null,"" , last.getNodeScene() ,start.getNodeScene(),mxConstants.STYLE_STROKECOLOR+color);
         edges.add(lastEdge);
     }
 
 
 
-    public void changeArretInformation(int index,String newValue){
+    public synchronized void changeArretInformation(int index,String newValue){
         if(index < 0 || index >= edges.size()) {
             System.err.println("Index Arrêt invalide ça doit être entre 0 et"+(edges.size() - 1));
             return;
@@ -94,7 +95,7 @@ public class LigneSimulation extends SimulationObject implements Flow.Subscriber
     }
 
 
-    public void changeEdgeInformation(int index,String newValue){
+    public synchronized void changeEdgeInformation(int index,String newValue){
         if(index < 0 || index >= edges.size()) {
             System.err.println("Index Edge invalide ça doit être entre 0 et"+(edges.size() - 1));
             return;
@@ -149,7 +150,7 @@ public class LigneSimulation extends SimulationObject implements Flow.Subscriber
     }
 
     @Override
-    public void onNext(BusNotification item) {
+    public synchronized void onNext(BusNotification item) {
             if(item.getTypeEvent() == BusNotification.STATE_CHARGEMENT_PASSAGERS){
                 changeArretInformation(item.getArretIndex() , item.getInformation());
             }

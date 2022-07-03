@@ -24,7 +24,9 @@ import java.util.Map;
 
 public abstract class Reseau implements IReseau {
 
-    public static Reseau INSTANCE = null;
+
+
+
 
     private List<LigneSimulation> lignes;
     private List<BusSimulation> busEnCirculation;
@@ -135,12 +137,6 @@ public abstract class Reseau implements IReseau {
             ligneActuelleSimulation.linkLast();
             lignes.add(ligneActuelleSimulation);
         }
-
-    }
-
-    @Override
-    public void displayInConsole() {
-
     }
 
     @Override
@@ -164,25 +160,7 @@ public abstract class Reseau implements IReseau {
         return parent;
     }
 
-    public static Reseau createReseau(ReseauDisponibleEnum reseau){
-        if(INSTANCE == null){
-             if(reseau == ReseauDisponibleEnum.AMETIS){
-                  INSTANCE = new AmetisReseau();
-             }
-             else
-                if(reseau == ReseauDisponibleEnum.SNCF){
-                  INSTANCE = new SncfReseau();
-             } else{
-                  INSTANCE = new DefaultReseau();
-                }
-        }
-        return INSTANCE;
-    }
 
-
-    public static Reseau getInstance(){
-        return INSTANCE;
-    }
 
     private static ReseauModel loadReseauConfig(String pathReseau){
         GsonBuilder builder = new GsonBuilder();

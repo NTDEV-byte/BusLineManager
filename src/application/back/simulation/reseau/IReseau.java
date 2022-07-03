@@ -6,7 +6,6 @@ public interface IReseau {
             public void constructReseau();
             public void loadReseau();
 
-            public void displayInConsole();
             public void displayGUI();
 
 

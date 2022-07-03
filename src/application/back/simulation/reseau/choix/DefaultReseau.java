@@ -1,6 +1,8 @@
-package application.back.simulation.reseau;
+package application.back.simulation.reseau.choix;
 
-public class DefaultReseau extends Reseau{
+import application.back.simulation.reseau.Reseau;
+
+public class DefaultReseau extends Reseau {
 
     @Override
     public void loadReseau() {

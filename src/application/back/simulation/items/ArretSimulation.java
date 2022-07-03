@@ -1,12 +1,13 @@
 package application.back.simulation.items;
 
+import application.back.SimulationMain;
 import application.back.models.ArretModel;
 import application.back.simulation.reseau.Reseau;
 import com.mxgraph.view.mxGraph;
 
 public class ArretSimulation extends SimulationObject {
 
-    private static Reseau reseau = Reseau.getInstance();
+    private static Reseau reseau = SimulationMain.getInstance();
     private Object node;
     private int width,height;
 
@@ -30,7 +31,7 @@ public class ArretSimulation extends SimulationObject {
         return arretModel.toString();
     }
 
-    private Object createCurrentNodeScene(){
+    private synchronized Object createCurrentNodeScene(){
         mxGraph graph = reseau.getGraph();
         ArretModel model = getModel();
         return graph.insertVertex(reseau.getParent() ,null,model.getNom(), model.getLatitude() , model.getLongitude() , width, height);
