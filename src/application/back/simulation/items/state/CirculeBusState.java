@@ -1,7 +1,6 @@
 package application.back.simulation.items.state;
 
 import application.back.models.BusModel;
-import application.back.simulation.BusNotification;
 import application.back.simulation.items.BusSimulation;
 
 public class CirculeBusState extends BusState {

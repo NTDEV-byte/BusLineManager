@@ -1,11 +1,9 @@
 package application.back.simulation.items;
 
 import application.back.models.BusModel;
-import application.back.simulation.BusNotification;
+import application.back.simulation.items.state.BusNotification;
 import application.back.simulation.items.state.*;
-import application.view.BusLineManagerView;
 
-import javax.swing.*;
 import java.util.concurrent.SubmissionPublisher;
 
 public class BusSimulation extends SimulationObject {

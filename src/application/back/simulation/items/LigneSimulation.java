@@ -2,7 +2,7 @@ package application.back.simulation.items;
 
 import application.back.SimulationMain;
 import application.back.models.LigneModel;
-import application.back.simulation.BusNotification;
+import application.back.simulation.items.state.BusNotification;
 import application.back.simulation.reseau.Reseau;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxConstants;
@@ -20,7 +20,6 @@ public class LigneSimulation extends SimulationObject implements Flow.Subscriber
     private List<Object> edges;
     private String color = "=#";
     private Flow.Subscription subscription;
-
 
 
     public LigneSimulation(LigneModel model) {
@@ -52,7 +51,6 @@ public class LigneSimulation extends SimulationObject implements Flow.Subscriber
         this.arrets.remove(arret);
     }
 
-
     private void createEdgeOnAdd(){
         mxGraph graph = SimulationMain.getInstance().getGraph();
         if(arrets.size() > 1){
@@ -67,33 +65,27 @@ public class LigneSimulation extends SimulationObject implements Flow.Subscriber
     public void linkLast(){
         ArretSimulation start = arrets.get(0);
         ArretSimulation last = arrets.get(arrets.size() - 1);
-
         mxGraph graph = SimulationMain.getInstance().getGraph();
         Object parent = SimulationMain.getInstance().getParent();
         Object lastEdge = graph.insertEdge(parent,null,"" , last.getNodeScene() ,start.getNodeScene(),mxConstants.STYLE_STROKECOLOR+color);
         edges.add(lastEdge);
     }
 
-
-
     public synchronized void changeArretInformation(int index,String newValue){
         if(index < 0 || index >= edges.size()) {
             System.err.println("Index Arrêt invalide ça doit être entre 0 et"+(edges.size() - 1));
             return;
         }
-
         int indexAEffacer = index == 0 ? getArrets().size() - 1 : index - 1;
-
-        // effacement du nom du bus sur le lien lorsque il arrive sur l'arrêt suivant
+         //effacement du nom du bus sur le lien lorsque il arrive sur l'arrêt suivant
         mxCell lienEntreDeuxArrêts  = ((mxCell)getEdges().get(indexAEffacer));
         lienEntreDeuxArrêts.setStyle(mxConstants.STYLE_STROKECOLOR + getColor());
         lienEntreDeuxArrêts.setValue("");
 
-        // Mise à jour de l'arrêt présent
+         //Mise à jour de l'arrêt présent
         mxCell arretPresent  = ((mxCell)getArrets().get(index).getNodeScene());
         arretPresent.setValue(newValue);
     }
-
 
     public synchronized void changeEdgeInformation(int index,String newValue){
         if(index < 0 || index >= edges.size()) {
@@ -106,7 +98,7 @@ public class LigneSimulation extends SimulationObject implements Flow.Subscriber
         ArretSimulation ars = arrets.get(index);
         arretPrecedent.setValue(ars.getModel().getNom());
 
-        // Mise à jour de l'arrêt présent
+       //  Mise à jour de l'arrêt présent
         mxCell cell = (mxCell)getEdges().get(index);
         cell.setStyle(mxConstants.STYLE_STROKECOLOR + getColor());
         cell.setValue(newValue);
@@ -118,16 +110,12 @@ public class LigneSimulation extends SimulationObject implements Flow.Subscriber
         cell.setStyle(mxConstants.STYLE_STROKECOLOR + "=#ff0000");
     }
 
-
     public void addBus(BusSimulation bus){
            this.bus.add(bus);
     }
-
     public void removeBus(BusSimulation bus){
             this.bus.add(bus);
     }
-
-
     public ArretSimulation getDepart(){
             return arrets.get(0);
     }
@@ -208,6 +196,4 @@ public class LigneSimulation extends SimulationObject implements Flow.Subscriber
     public String getColor() {
         return color;
     }
-
-
 }

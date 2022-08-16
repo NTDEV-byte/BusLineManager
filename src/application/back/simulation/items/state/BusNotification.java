@@ -1,4 +1,4 @@
-package application.back.simulation;
+package application.back.simulation.items.state;
 
 public class BusNotification {
 
@@ -8,7 +8,7 @@ public class BusNotification {
 
             private int typeEvent;
             private int arretIndex;
-            String information;
+            private String information;
 
             public BusNotification(int typeEvent,int arretIndex, String information) {
                 this.typeEvent = typeEvent;

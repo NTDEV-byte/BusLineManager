@@ -39,7 +39,6 @@ public class ArretSimulation extends SimulationObject {
 
     public Object getNodeScene(){return node;}
 
-
     @Override
     public ArretModel getModel() {
         return ((ArretModel)model);

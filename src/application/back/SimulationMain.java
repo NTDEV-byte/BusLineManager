@@ -14,18 +14,12 @@ public class SimulationMain {
 
             public static void main(String[] args){
                      createReseau();
-                try {
-                    Thread.currentThread().join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
 
             private static void createReseau(){
                  System.out.println("Choisir un Réseau AMETIS (0) ");
                  System.out.println("Choisir un Réseau SNCF   (1) ");
-                 System.out.println("Choisir un Réseau Default ");
-
+                 System.out.println("Réseau par defaut  (-1) ");
 
                  Scanner sc = new Scanner(System.in);
                  int choix = sc.nextInt();
@@ -53,7 +47,6 @@ public class SimulationMain {
                          break;
                  }
                  reseau.loadReseau();
-
             }
 
             public static Reseau getInstance(){

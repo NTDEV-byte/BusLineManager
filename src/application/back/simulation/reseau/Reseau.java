@@ -13,6 +13,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
@@ -21,11 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-
 public abstract class Reseau implements IReseau {
-
-
-
 
 
     private List<LigneSimulation> lignes;
@@ -41,16 +38,13 @@ public abstract class Reseau implements IReseau {
         this.graph = new mxGraph();
         this.parent = graph.getDefaultParent();
         this.graph.setCellsEditable(false);
-        //this.configJGraphX();
     }
-
     protected void configJGraphX(){
         Map<String, Object> style = graph.getStylesheet().getDefaultEdgeStyle();
         style.put(mxConstants.STYLE_ROUNDED, true);
         style.put(mxConstants.STYLE_EDGE, mxConstants.EDGESTYLE_ENTITY_RELATION);
         this.graph.setCellsEditable(false);
     }
-
 
     private int randX(){
         return (int)(Math.random() * 800);
@@ -75,7 +69,6 @@ public abstract class Reseau implements IReseau {
         LigneSimulation l2 = new LigneSimulation(new LigneModel(2,"L2") , "00ff00");
 
         ArretSimulation a21 = new ArretSimulation(new ArretModel(1,"L2-A1",randX(),randY()));
-      //  l2.addArret(a1);
         ArretSimulation a22 = new ArretSimulation(new ArretModel(2,"L2-A2",randX(),randY()));
         ArretSimulation a23 = new ArretSimulation(new ArretModel(3,"L2-A3",randX(),randY()));
         ArretSimulation a24 = new ArretSimulation(new ArretModel(4,"L2-A4",randX(),randY()));
@@ -83,20 +76,8 @@ public abstract class Reseau implements IReseau {
         l2.addArret(a21);l2.addArret(a22);l2.addArret(a23);l2.addArret(a24);l2.addArret(a25);
         l2.linkLast();
 
-//        LigneSimulation l3 = new LigneSimulation(new LigneModel(2,"L3") , "ff0000");
-//        l3.addArret(a1);
-//        ArretSimulation a31 = new ArretSimulation(new ArretModel(1,"L3-A1",randX(),randY()));
-//        ArretSimulation a32 = new ArretSimulation(new ArretModel(2,"L3-A2",randX(),randY()));
-//        ArretSimulation a33 = new ArretSimulation(new ArretModel(3,"L3-A3",randX(),randY()));
-//        ArretSimulation a34 = new ArretSimulation(new ArretModel(4,"L3-A4",randX(),randY()));
-//        ArretSimulation a35 = new ArretSimulation(new ArretModel(5,"L3-A5",randX(),randY()));
-//        l3.addArret(a31);l3.addArret(a32);l3.addArret(a33);l3.addArret(a34);l3.addArret(a35);
-//        l3.linkLast();
-
          depot.affecteBusAlALigneDuReseauEtArret(1,l1 , a1);
          depot.affecteBusAlALigneDuReseauEtArret(2,l2 , a21);
-//        depot.affecteBusAlALigneDuReseauEtArret(3,l1 , a1);
-        //depot.affecteBusAlALigneDuReseauEtArret(3,l3 , a1);
 
          displayGUI();
     }
@@ -108,8 +89,8 @@ public abstract class Reseau implements IReseau {
     protected void affectationBus()
     {
         depot.affecteBusAlALigneDuReseau(1 , lignes.get(0));
-        depot.affecteBusAlALigneDuReseau(3 , lignes.get(1));
-        depot.affecteBusAlALigneDuReseau(2 , lignes.get(2));
+        depot.affecteBusAlALigneDuReseau(2 , lignes.get(1));
+        depot.affecteBusAlALigneDuReseau(3 , lignes.get(2));
     }
 
     protected void createReseauUsingFile(String pathReseau){
@@ -141,15 +122,14 @@ public abstract class Reseau implements IReseau {
 
     @Override
     public void displayGUI() {
-        graph.getModel().beginUpdate();
-        try{
-           // constructReseau();
-
-            new BusLineManagerView(graph);
-
-        } finally {
-            graph.getModel().endUpdate();
-        }
+        SwingUtilities.invokeLater(() -> {
+            graph.getModel().beginUpdate();
+            try{
+                new BusLineManagerView(graph);
+            } finally {
+                graph.getModel().endUpdate();
+            }
+        });
     }
 
     public mxGraph getGraph() {
@@ -159,8 +139,6 @@ public abstract class Reseau implements IReseau {
     public Object getParent() {
         return parent;
     }
-
-
 
     private static ReseauModel loadReseauConfig(String pathReseau){
         GsonBuilder builder = new GsonBuilder();

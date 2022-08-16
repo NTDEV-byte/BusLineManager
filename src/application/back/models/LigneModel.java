@@ -29,15 +29,6 @@ public class LigneModel extends Model {
                    arrets.remove(arret);
             }
 
-            public String ordreCroissant(){
-                arrets.sort((a1 , a2) -> a1.getId() - a2.getId());
-                return arrets.toString();
-            }
-
-            public String ordreDecroissant(){
-                arrets.sort((a1 , a2) -> a2.getId() - a1.getId());
-                return arrets.toString();
-            }
 
             public List<ArretModel> getArrets() {
                 return arrets;
